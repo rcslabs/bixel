@@ -1,0 +1,20 @@
+{
+  "name": "bixel",
+  "homepage": "https://github.com/rcslabs/bixel",
+  "authors": [
+    "esix <esix@live.ru>"
+  ],
+  "description": "BI eXternal ELement - javascript library to inject elements to LuxmsBI",
+  "main": "bixel.js",
+  "keywords": [
+    "LuxmsBI",
+    "BI"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    ".gitignore",
+    ".jshintrc",
+    "README.md"
+  ]
+}
