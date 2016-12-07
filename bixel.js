@@ -237,6 +237,7 @@
 		var locations = axis.locations;
 		var periods   = axis.periods;
 		var dims      = axis.dimensions;
+		var axisOrder = axis.axisOrder;     // 'MLP', 'LMP', 'PML' ...
 
 		var dh = {}, mh = {}, lh = {}, ph = {};
 		metrics  .forEach(function (m) { mh[m.id] = m });
@@ -257,6 +258,16 @@
 		result.getDimension  = function (id) { return dh[id] || null; };
 
 		result.getDimensionByMetric = function (m) { return result.getDimension(m.dim_id) };
+
+		var byLetter = {
+			'M': metrics,
+			'L': locations,
+			'P': periods
+		};
+
+		result.getZs = function () { return  byLetter[axisOrder[0]] };
+		result.getYs = function () { return  byLetter[axisOrder[1]] };
+		result.getXs = function () { return  byLetter[axisOrder[2]] };
 
 		return result;
 	}
