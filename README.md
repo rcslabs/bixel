@@ -67,8 +67,8 @@ provides methods:
   will be maximum of `locationsCount` length if specified in `bixel.init` method
 - `axis.getPeriods()` - returns javascript array of `Period` objects. This array
   will be maximum of `periodsCount` length if specified in `bixel.init` method
-- `axis.getDimensions()` returns javascript array of `Dimension` objects. It will
-  contain all the dimensions linked with metrics
+- `axis.getUnits()` returns javascript array of `Unit` objects. It will
+  contain all the units linked with metrics
 
 ## Data object
 provides methods:
@@ -77,7 +77,7 @@ provides methods:
 
 ## DataItem
 Generally a javascript `Number` object with overridden `toString` method.
-`toString` will return formatted value according to dimension.
+`toString` will return formatted value according to measure unit.
 
 example:
 ```javascript
@@ -99,7 +99,7 @@ javascript object, has fields:
 - `id`:string - unique id of metric
 - `title`:string - title of metric
 - `color`:string - color for this metric according to dash configuration
-- `dim_id`: string - the id of dimension linked to the metric
+- `unit_id`: string - the id of unit linked to the metric
 
 ## Location object
 javascript object, has fields:

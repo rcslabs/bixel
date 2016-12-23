@@ -214,19 +214,19 @@
 	}
 
 
-	function makeValue(v, dim, digits) {
+	function makeValue(v, unit, digits) {
 		if (v == null) return '-';
 		if (typeof v === 'string') return v;
 		if (v instanceof String) return v.valueOf();
 		if (v instanceof Number) v = v.valueOf();
 		if (isNaN(v)) return '-';
 		if (digits == null) digits = 2;
-		var strValue = (dim && dim.config && dim.config.valueMap && (v in dim.config.valueMap))
-				? dim.config.valueMap[v]
+		var strValue = (unit && unit.config && unit.config.valueMap && (v in unit.config.valueMap))
+				? unit.config.valueMap[v]
 				: formatNum(v, digits);
-		if (dim) {
-			if (dim.value_prefix) strValue = dim.value_prefix + ' ' + strValue;
-			if (dim.value_suffix) strValue = strValue + ' ' + dim.value_suffix;
+		if (unit) {
+			if (unit.value_prefix) strValue = unit.value_prefix + ' ' + strValue;
+			if (unit.value_suffix) strValue = strValue + ' ' + unit.value_suffix;
 		}
 		return strValue;
 	}
@@ -236,28 +236,34 @@
 		var metrics   = axis.metrics;
 		var locations = axis.locations;
 		var periods   = axis.periods;
-		var dims      = axis.dimensions;
+		var units     = axis.units || axis.dimensions;
 		var axisOrder = axis.axisOrder;     // 'MLP', 'LMP', 'PML' ...
 
-		var dh = {}, mh = {}, lh = {}, ph = {};
+		var mh = {}, lh = {}, ph = {}, uh = {};
 		metrics  .forEach(function (m) { mh[m.id] = m });
 		locations.forEach(function (l) { lh[l.id] = l });
 		periods  .forEach(function (p) { ph[p.id] = p });
-		dims     .forEach(function (d) { dh[d.id] = d });
+		units    .forEach(function (u) { uh[u.id] = d });
 
 		var result = {};
 
 		result.getMetrics    = function ()   { return metrics;        };
 		result.getLocations  = function ()   { return locations;      };
 		result.getPeriods    = function ()   { return periods;        };
-		result.getDimensions = function ()   { return dims;           };
+		result.getUnits      = function ()   { return units;          };
+		result.getDimensions = function ()   { return units;          };    // deprecated
 
 		result.getMetric     = function (id) { return mh[id] || null; };
 		result.getLocation   = function (id) { return lh[id] || null; };
 		result.getPeriod     = function (id) { return ph[id] || null; };
-		result.getDimension  = function (id) { return dh[id] || null; };
+		result.getUnit       = function (id) { return dh[id] || null; };    // deprecated
+		result.getDimension  = function (id) { return dh[id] || null; };    // deprecated
 
-		result.getDimensionByMetric = function (m) { return result.getDimension(m.dim_id) };
+
+		var getUnitIdByM = function (m) { return ('unit_id' in m) ? m.unit_id : m.dim_id };
+
+		result.getUnitByMetric = function (m) { return result.getUnit(getUnitIdByM(m)) };
+		result.getDimensionByMetric = function (m) { return result.geUnit(getUnitIdByM(m)) };
 
 		var byLetter = {
 			'M': metrics,
@@ -265,9 +271,9 @@
 			'P': periods
 		};
 
-		result.getZs = function () { return  byLetter[axisOrder[0]] };
-		result.getYs = function () { return  byLetter[axisOrder[1]] };
-		result.getXs = function () { return  byLetter[axisOrder[2]] };
+		result.getZs = function () { return byLetter[axisOrder[0]] };
+		result.getYs = function () { return byLetter[axisOrder[1]] };
+		result.getXs = function () { return byLetter[axisOrder[2]] };
 
 		return result;
 	}
@@ -278,7 +284,7 @@
 		if (isNaN(val)) {
 			return '-';
 		}
-		return makeValue(val, this.d);    // d - dimension
+		return makeValue(val, this.u);    // u - unit
 	};
 
 
@@ -296,7 +302,7 @@
 			nal.m = m;
 			nal.l = l;
 			nal.p = p;
-			nal.d = axis.getDimensionByMetric(m);
+			nal.d = axis.getUnitByMetric(m);
 			nal.toString = _nalToString;
 			return nal;
 		}
