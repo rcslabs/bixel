@@ -297,7 +297,7 @@
 			nal.m = m;
 			nal.l = l;
 			nal.p = p;
-			nal.d = axis.getUnitByMetric(m);
+			nal.u = axis.getUnitByMetric(m);
 			nal.toString = _nalToString;
 			return nal;
 		}
