@@ -243,7 +243,7 @@
 		metrics  .forEach(function (m) { mh[m.id] = m });
 		locations.forEach(function (l) { lh[l.id] = l });
 		periods  .forEach(function (p) { ph[p.id] = p });
-		units    .forEach(function (u) { uh[u.id] = d });
+		units    .forEach(function (u) { uh[u.id] = u });
 
 		var result = {};
 
@@ -251,19 +251,14 @@
 		result.getLocations  = function ()   { return locations;      };
 		result.getPeriods    = function ()   { return periods;        };
 		result.getUnits      = function ()   { return units;          };
-		result.getDimensions = function ()   { return units;          };    // deprecated
 
 		result.getMetric     = function (id) { return mh[id] || null; };
 		result.getLocation   = function (id) { return lh[id] || null; };
 		result.getPeriod     = function (id) { return ph[id] || null; };
-		result.getUnit       = function (id) { return dh[id] || null; };    // deprecated
-		result.getDimension  = function (id) { return dh[id] || null; };    // deprecated
+		result.getUnit       = function (id) { return uh[id] || null; };
 
-
-		var getUnitIdByM = function (m) { return ('unit_id' in m) ? m.unit_id : m.dim_id };
-
-		result.getUnitByMetric = function (m) { return result.getUnit(getUnitIdByM(m)) };
-		result.getDimensionByMetric = function (m) { return result.geUnit(getUnitIdByM(m)) };
+		var _getUnitIdByM = function (m) { return ('unit_id' in m) ? m.unit_id : m.dim_id };
+		result.getUnitByMetric = function (m) { return result.getUnit(_getUnitIdByM(m)) };
 
 		var byLetter = {
 			'M': metrics,
